@@ -1,6 +1,5 @@
 import logging
 
-
 # class MyFilter(logging.Filter):
 # 	def filter(self, record):
 # 		return not record.getMessage().__contains__('SomeString we want to exclude from logging')
@@ -54,9 +53,6 @@ def getMyLogger(name):
 	stream_handler.setFormatter(ConsoleFormatter())
 	logger.addHandler(stream_handler)
 
-	# file logging
-	file_handler = logging.FileHandler('./replicator.log')
-	file_handler.setFormatter(logging.Formatter('%(asctime)s: %(name)s: %(levelname)s: %(message)s'))
-	logger.addHandler(file_handler)
+	# file handler: added dynamically in main.py after script starts due to filename from commandline
 
 	return logger
