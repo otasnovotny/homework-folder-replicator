@@ -53,6 +53,6 @@ def getMyLogger(name):
 	stream_handler.setFormatter(ConsoleFormatter())
 	logger.addHandler(stream_handler)
 
-	# file handler: added dynamically in main.py after script starts due to filename from commandline
+	# file handler: added dynamically in main.py after script starts due to filename from command line
 
 	return logger
