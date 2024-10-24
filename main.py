@@ -1,3 +1,4 @@
+from app.Replicator import Replicator
 from my_logging import getMyLogger
 import argparse, logging
 
@@ -17,10 +18,6 @@ if __name__ == '__main__':
 
   args = parser.parse_args()
   add_logging_file_handler(args.logFilename)
-  logger.info(f"Replicating from `{args.sourceDir}` to `{args.replicaDir}`. Logging to `{args.logFilename}`")
 
-  # logger.debug("Debug log...")
-  # logger.info("Info log...")
-  # logger.warning("Warning log...")
-  # logger.error("Error log...")
-  # logger.critical("Critical log...")
+  replicator = Replicator()
+  replicator.sync(source_dir=args.sourceDir, replica_dir=args.replicaDir)
