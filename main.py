@@ -1,8 +1,11 @@
 from app.Replicator import Replicator
 from my_logging import getMyLogger
 import argparse, logging
+import os
 
 logger = getMyLogger(__name__)
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+
 
 def add_logging_file_handler(filename: str) -> None:
   file_handler = logging.FileHandler(args.logFilename)
@@ -19,5 +22,5 @@ if __name__ == '__main__':
   args = parser.parse_args()
   add_logging_file_handler(args.logFilename)
 
-  replicator = Replicator()
-  replicator.sync(source_dir=args.sourceDir, replica_dir=args.replicaDir)
+  replicator = Replicator(source_dir=args.sourceDir, replica_dir=args.replicaDir, log_filename=args.logFilename)
+  replicator.sync()
