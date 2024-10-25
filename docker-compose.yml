@@ -1,0 +1,7 @@
+services:
+  cron:
+    build:
+      context: ./.docker/cron
+    volumes:
+      - .:/app/cron
+    restart: unless-stopped

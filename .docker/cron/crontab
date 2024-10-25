@@ -1,0 +1,2 @@
+# run every minute
+* * * * * /usr/local/bin/python3 /app/cron/main.py /app/cron/source /app/cron/replica --logFilename=/app/cron/replicator.log >> /app/cron/replicator-cron.log 2>&1

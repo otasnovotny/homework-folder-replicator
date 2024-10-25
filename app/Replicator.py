@@ -107,7 +107,7 @@ class Replicator:
           os.remove(item_path)
 
       # Finally, remove the empty directory
-      logger.info(f"Removing empty direcorty `{dir_path}`")
+      logger.info(f"Removing empty directory `{dir_path}`")
       os.rmdir(dir_path)
     else:
       logger.error(f"The directory does not exist or is not a directory: {dir_path}")
