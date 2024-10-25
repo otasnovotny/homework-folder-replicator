@@ -67,7 +67,11 @@ class Replicator:
         ## Check if the file needs to be copied
         # if not os.path.exists(replica_path) or (os.path.getmtime(source_path) > os.path.getmtime(replica_path)):
         #   shutil.copy(source_path, replica_path)
-        logger.info(f"Copying `{source_path}` to `{replica_path}`")
+
+        if os.path.exists(replica_path):
+          logger.info(f"Updating `{replica_path}` from {source_path}")
+        else:
+          logger.info(f"Creating `{replica_path}` from `{source_path}`")
         shutil.copy(source_path, replica_path)
 
     # Remove files in `replica` that are not in `source`
@@ -81,6 +85,7 @@ class Replicator:
           self._remove_dir(dir_path=replica_path)
         else:
           # remove file
+          logger.info(f"Removing `{replica_path}`")
           os.remove(replica_path)
 
   def _remove_dir(self, dir_path):
