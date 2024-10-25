@@ -1,9 +1,9 @@
 import os, shutil
-from main import ROOT_DIR
 from my_logging import getMyLogger
 import time
 import sys
-import argparse, logging
+import logging
+from settings import ROOT_DIR
 
 logger = getMyLogger(__name__)
 
@@ -17,7 +17,7 @@ class Replicator:
 
     file_handler = logging.FileHandler(log_filename)
     file_handler.setFormatter(logging.Formatter('%(asctime)s: %(name)s: %(levelname)s: %(message)s'))
-    file_handler.setLevel(logging.WARNING)
+    # file_handler.setLevel(logging.WARNING)
     logger.addHandler(file_handler)
 
     """Optional sleep for development purposes to simulate a long run"""
@@ -49,7 +49,7 @@ class Replicator:
     Do it recursively due to spec: No 3rd libraries
     Otherwise: shutil.copytree(source_dir, target_dir)
     """
-    logger.info(f"Syncing `{source_dir}` into `{replica_dir}`")
+    # logger.info(f"Syncing `{source_dir}` into `{replica_dir}`")
 
     # Ensure target directory exists
     if not os.path.exists(replica_dir):
@@ -67,6 +67,7 @@ class Replicator:
         ## Check if the file needs to be copied
         # if not os.path.exists(replica_path) or (os.path.getmtime(source_path) > os.path.getmtime(replica_path)):
         #   shutil.copy(source_path, replica_path)
+        logger.info(f"Copying `{source_path}` to `{replica_path}`")
         shutil.copy(source_path, replica_path)
 
     # Remove files in `replica` that are not in `source`
@@ -88,6 +89,7 @@ class Replicator:
     Otherwise: shutil.rmtree(target_path)
     """
     if os.path.exists(dir_path) and os.path.isdir(dir_path):
+
       # Iterate through all the items in the directory
       for item in os.listdir(dir_path):
         item_path = os.path.join(dir_path, item)  # Get full path of the item
@@ -96,14 +98,17 @@ class Replicator:
           self._remove_dir(item_path)
         else:
           # If it's a file, remove it
+          logger.info(f"Removing file `{item_path}`")
           os.remove(item_path)
+
       # Finally, remove the empty directory
+      logger.info(f"Removing empty direcorty `{dir_path}`")
       os.rmdir(dir_path)
-      logger.debug(f"Successfully removed the directory: {dir_path}")
     else:
       logger.error(f"The directory does not exist or is not a directory: {dir_path}")
 
   def sync(self):
+    logger.info("== Sync triggered ==")
     if not self._create_lock():
       logger.warning("Another instance is already running. Exiting.")
       sys.exit(1)

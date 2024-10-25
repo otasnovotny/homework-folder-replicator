@@ -4,7 +4,6 @@ import argparse, logging
 import os
 
 logger = getMyLogger(__name__)
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 def add_logging_file_handler(filename: str) -> None:
