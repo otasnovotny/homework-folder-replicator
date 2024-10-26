@@ -1,4 +1,4 @@
-from app.Replicator import Replicator
+from src.Replicator import Replicator
 from my_logging import getMyLogger
 import argparse, logging
 import os

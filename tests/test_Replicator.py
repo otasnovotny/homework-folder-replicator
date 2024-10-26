@@ -2,7 +2,7 @@ import os
 import shutil
 from unittest import TestCase
 
-from app.Replicator import Replicator
+from src.Replicator import Replicator
 from settings import ROOT_DIR
 
 TMP_DIR = os.path.join(ROOT_DIR, 'tmp')

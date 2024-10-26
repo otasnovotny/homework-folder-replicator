@@ -72,7 +72,11 @@ class Replicator:
           logger.info(f"Updating `{replica_path}` from {source_path}")
         else:
           logger.info(f"Creating `{replica_path}` from `{source_path}`")
-        shutil.copy(source_path, replica_path)
+
+        try:
+          shutil.copy(source_path, replica_path)
+        except Exception as e:
+          logger.error(e)
 
     # Remove files in `replica` that are not in `source`
     for item in os.listdir(replica_dir):
@@ -86,7 +90,10 @@ class Replicator:
         else:
           # remove file
           logger.info(f"Removing `{replica_path}`")
-          os.remove(replica_path)
+          try:
+            os.remove(replica_path)
+          except Exception as e:
+            logger.error(e)
 
   def _remove_dir(self, dir_path):
     """
@@ -104,11 +111,17 @@ class Replicator:
         else:
           # If it's a file, remove it
           logger.info(f"Removing file `{item_path}`")
-          os.remove(item_path)
+          try:
+            os.remove(item_path)
+          except Exception as e:
+            logger.error(e)
 
       # Finally, remove the empty directory
       logger.info(f"Removing empty directory `{dir_path}`")
-      os.rmdir(dir_path)
+      try:
+        os.rmdir(dir_path)
+      except Exception as e:
+        logger.error(e)
     else:
       logger.error(f"The directory does not exist or is not a directory: {dir_path}")
 
