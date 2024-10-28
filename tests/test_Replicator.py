@@ -1,6 +1,6 @@
 import shutil, logging, os
 from unittest import TestCase
-from my_logging import getMyLogger
+from src.my_logging import getMyLogger
 from src.Replicator import Replicator
 from settings import ROOT_DIR
 

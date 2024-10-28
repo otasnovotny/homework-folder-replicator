@@ -1,6 +1,6 @@
 from logging import Logger
 from src.Replicator import Replicator
-from my_logging import getMyLogger
+from src.my_logging import getMyLogger
 import argparse, logging
 from apscheduler.schedulers.blocking import BlockingScheduler
 
