@@ -1,13 +1,13 @@
-import os
-import shutil
+import shutil, logging, os
 from unittest import TestCase
-
+from my_logging import getMyLogger
 from src.Replicator import Replicator
 from settings import ROOT_DIR
 
 TMP_DIR = os.path.join(ROOT_DIR, 'tmp')
 SOURCE_DIR = os.path.join(TMP_DIR, 'source')
 REPLICA_DIR = os.path.join(TMP_DIR, 'replica')
+
 
 class TestReplicator(TestCase):
 
@@ -22,9 +22,15 @@ class TestReplicator(TestCase):
 			shutil.rmtree(REPLICA_DIR)
 		os.makedirs(REPLICA_DIR, exist_ok=True)
 
-		self.replicator = Replicator(
-			source_dir=SOURCE_DIR, replica_dir=REPLICA_DIR, log_filename=f"{ROOT_DIR}/replicator.log"
-		)
+		# setup logger
+		file_handler = logging.FileHandler(f"{ROOT_DIR}/replicator_test.log")
+		file_handler.setFormatter(logging.Formatter('%(asctime)s: %(name)s: %(levelname)s: %(message)s'))
+		# file_handler.setLevel(logging.WARNING)
+		self.logger = getMyLogger(__name__)
+		self.logger.addHandler(file_handler)
+
+		# setup replicator
+		self.replicator = Replicator(source_dir=SOURCE_DIR, replica_dir=REPLICA_DIR, logger=self.logger)
 
 	def tearDown(self):
 		# I suppose I can use rmtree here ;-)
