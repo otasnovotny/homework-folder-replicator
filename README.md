@@ -1,4 +1,4 @@
-# Veeam replicator
+# Folder replicator
 
 This app replicates folder `source` into folder `replica`.
 
