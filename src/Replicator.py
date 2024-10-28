@@ -1,27 +1,18 @@
 import os, shutil
-from my_logging import getMyLogger
+from logging import Logger
 import time
 import sys
-import logging
 from settings import ROOT_DIR
-
-logger = getMyLogger(__name__)
 
 
 class Replicator:
   lock_file = f"{ROOT_DIR}/tmp/replicator.lock"
 
-  def __init__(self, source_dir: str, replica_dir, log_filename: str, sleep: int = 0):
+  def __init__(self, source_dir: str, replica_dir, logger: Logger, sleep: int = 0):
     self.source_dir = source_dir
     self.replica_dir = replica_dir
-
-    file_handler = logging.FileHandler(log_filename)
-    file_handler.setFormatter(logging.Formatter('%(asctime)s: %(name)s: %(levelname)s: %(message)s'))
-    # file_handler.setLevel(logging.WARNING)
-    logger.addHandler(file_handler)
-
-    """Optional sleep for development purposes to simulate a long run"""
-    self.sleep = sleep
+    self.logger = logger
+    self.sleep = sleep  # Optional sleep for development purposes to simulate a long run
 
   def _create_lock(self):
     """Create a lock file to indicate the job is running."""
@@ -49,7 +40,7 @@ class Replicator:
     Do it recursively due to spec: No 3rd libraries
     Otherwise: shutil.copytree(source_dir, target_dir)
     """
-    # logger.info(f"Syncing `{source_dir}` into `{replica_dir}`")
+    # self.logger.info(f"Syncing `{source_dir}` into `{replica_dir}`")
 
     # Ensure target directory exists
     if not os.path.exists(replica_dir):
@@ -69,14 +60,14 @@ class Replicator:
         #   shutil.copy(source_path, replica_path)
 
         if os.path.exists(replica_path):
-          logger.info(f"Updating `{replica_path}` from {source_path}")
+          self.logger.info(f"Updating `{replica_path}` from {source_path}")
         else:
-          logger.info(f"Creating `{replica_path}` from `{source_path}`")
+          self.logger.info(f"Creating `{replica_path}` from `{source_path}`")
 
         try:
           shutil.copy(source_path, replica_path)
         except Exception as e:
-          logger.error(e)
+          self.logger.error(e)
 
     # Remove files in `replica` that are not in `source`
     for item in os.listdir(replica_dir):
@@ -89,13 +80,13 @@ class Replicator:
           self._remove_dir(dir_path=replica_path)
         else:
           # remove file
-          logger.info(f"Removing `{replica_path}`")
+          self.logger.info(f"Removing `{replica_path}`")
           try:
             os.remove(replica_path)
           except Exception as e:
-            logger.error(e)
+            self.logger.error(e)
 
-  def _remove_dir(self, dir_path):
+  def _remove_dir(self, dir_path: str):
     """
     Do it recursively due to spec: No 3rd libraries
     Otherwise: shutil.rmtree(target_path)
@@ -110,26 +101,27 @@ class Replicator:
           self._remove_dir(item_path)
         else:
           # If it's a file, remove it
-          logger.info(f"Removing file `{item_path}`")
+          self.logger.info(f"Removing file `{item_path}`")
           try:
             os.remove(item_path)
           except Exception as e:
-            logger.error(e)
+            self.logger.error(e)
 
       # Finally, remove the empty directory
-      logger.info(f"Removing empty directory `{dir_path}`")
+      self.logger.info(f"Removing empty directory `{dir_path}`")
       try:
         os.rmdir(dir_path)
       except Exception as e:
-        logger.error(e)
+        self.logger.error(e)
     else:
-      logger.error(f"The directory does not exist or is not a directory: {dir_path}")
+      self.logger.error(f"The directory does not exist or is not a directory: {dir_path}")
 
   def sync(self):
-    logger.info("== Sync triggered ==")
+    self.logger.info("== Sync triggered ==")
     if not self._create_lock():
-      logger.warning("Another instance is already running. Exiting.")
-      sys.exit(1)
+      self.logger.warning("Another instance is already running. Exiting.")
+      # sys.exit(1)
+      return
 
     try:
       self._replicate_dir(source_dir=self.source_dir, replica_dir=self.replica_dir)

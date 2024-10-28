@@ -1,14 +1,12 @@
+from logging import Logger
 from src.Replicator import Replicator
 from my_logging import getMyLogger
-import argparse
+import argparse, logging
 from apscheduler.schedulers.blocking import BlockingScheduler
 
-logger = getMyLogger(__name__)
-
-def sync_job(source_dir, replica_dir, log_filename):
-  replicator = Replicator(source_dir=source_dir, replica_dir=replica_dir, log_filename=log_filename)
+def sync_job(source_dir: str, replica_dir: str, logger: Logger):
+  replicator = Replicator(source_dir=source_dir, replica_dir=replica_dir, logger=logger)
   replicator.sync()
-
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser(description="Replicator argument parser.")
@@ -22,9 +20,15 @@ if __name__ == '__main__':
   if interval_seconds < 0:
     raise ValueError
 
+  logger = getMyLogger(__name__)
+  file_handler = logging.FileHandler(args.logFilename)
+  file_handler.setFormatter(logging.Formatter('%(asctime)s: %(name)s: %(levelname)s: %(message)s'))
+  # file_handler.setLevel(logging.WARNING)
+  logger.addHandler(file_handler)
+
   scheduler = BlockingScheduler()
   scheduler.add_job(
-    sync_job, 'interval', seconds=interval_seconds, args=[args.sourceDir, args.replicaDir, args.logFilename]
+    sync_job, 'interval', seconds=interval_seconds, args=[args.sourceDir, args.replicaDir, logger]
   )
 
   try:
