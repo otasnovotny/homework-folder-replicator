@@ -28,11 +28,12 @@ python -m unittest discover -s tests
 python main.py ./source ./replica --logFilename=replicator1.log
 ```
 
-## In a Docker container
+## In a Docker container (periodically)
 
-Running in docker container the sync process is triggered as a cron every minute. Folder `replica` is mirrored from the 
-`source` folder automatically.
+Running in docker container the sync process is triggered as a cron every <interval_seconds>. 
+Folder `replica` is mirrored from the `source` folder automatically.
 
 ```
 docker compose up -d
+docker compose exec -it cron /usr/local/bin/python3 /app/cron/main.py /app/cron/source /app/cron/replica 5 /app/cron/replicator.log
 ```
