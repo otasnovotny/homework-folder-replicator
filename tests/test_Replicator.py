@@ -51,7 +51,14 @@ class TestReplicator(TestCase):
 		self.assertEqual(os.path.exists(source_file_path), True)
 		self.assertEqual(os.path.exists(replica_file_path), False)
 
-		# action
+		# action 1. (logging `Creating`)
+		self.replicator.sync()
+
+		# after action
+		self.assertEqual(os.path.exists(source_file_path), True)
+		self.assertEqual(os.path.exists(replica_file_path), True)
+
+		# action 2. (logging `Updating`)
 		self.replicator.sync()
 
 		# after action

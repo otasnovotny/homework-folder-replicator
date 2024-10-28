@@ -4,6 +4,12 @@ This app replicates folder `source` into folder `replica`.
 
 ## On local machine
 
+### Clone repo
+```
+git clone git@github.com:otasnovotny/folder_replicator.git
+cd ./folder_replicator
+```
+
 ### Prepare virtual env
 ```
 # Install python:3.12.1
