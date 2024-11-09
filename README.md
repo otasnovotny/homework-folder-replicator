@@ -32,15 +32,11 @@ perfectly acceptable to use a third-party (or built-in) library.
 
 ## Solution
 
-This app replicates folder `source` into folder `replica`.
+Clone repo and navigate to the root folder
 
-### On the local machine
+### Pure `localhost` approach
 
-#### Clone repo
-```
-git clone git@github.com:otasnovotny/folder_replicator.git
-cd ./folder_replicator
-```
+For development purposes
 
 #### Prepare virtual env
 ```
@@ -65,7 +61,7 @@ Folder `replica` is mirrored from the `source` folder automatically.
 python main.py ./source ./replica 5 ./replicator_local.log
 ```
 
-### In a Docker container
+### `Docker` approach
 The same in a docker container
 ```
 docker compose up -d
